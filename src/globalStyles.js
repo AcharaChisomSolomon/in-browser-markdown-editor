@@ -135,4 +135,19 @@ export default css`
   #root, #__next {
     isolation: isolate;
   }
+
+  body[data-theme='light'] {
+    --bg: var(--grey-100);
+    --bg-sub: var(--grey-200);
+    --text-header: var(--grey-500);
+    --text-input: var(--grey-700);
+    --hr-line: var(--grey-300);
+  }
+  body[data-theme='dark'] {
+    --bg: var(--grey-1000);
+    --bg-sub: var(--grey-900);
+    --text-header: var(--grey-400);
+    --text-input: var(--grey-400);
+    --hr-line: var(--grey-600);
+  }
 `;

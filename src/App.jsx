@@ -8,11 +8,15 @@ import Markdown from "./components/Markdown"
 // eslint-disable-next-line no-unused-vars
 import markdownContext from "./utils/markdownContext"
 import useGetLightTheme from "./hooks/useGetLightTheme"
+import useGetData from "./hooks/useGetData"
 
 export default function App() {
-  const [showSidebar, setShowSidebar] = React.useState(true)
+  const [showSidebar, setShowSidebar] = React.useState(false)
   const [fileName, setFileName] = React.useState("welcome.md")
   const [isLightTheme, setIsLightTheme] = useGetLightTheme()
+  const [data] = useGetData()
+
+  console.log(data)
 
   const necessaryStates = {
     showSidebar,
@@ -41,7 +45,7 @@ export default function App() {
 }
 
 const Container = styled.div`
-  overflow: ${p => p.tomove && 'hidden'};
+  overflow: hidden;
 `;
 
 const Wrapper = styled.div`

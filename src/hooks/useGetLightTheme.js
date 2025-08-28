@@ -19,5 +19,10 @@ export default function useGetLightTheme() {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
+  // Set data-theme attribute on body
+  useEffect(() => {
+    document.body.setAttribute("data-theme", isLightTheme ? "light" : "dark");
+  }, [isLightTheme]);
+
   return [isLightTheme, setIsLightTheme];
 }
