@@ -17,7 +17,9 @@ export default function App() {
   const [isLightTheme, setIsLightTheme] = useGetLightTheme()
   
   React.useEffect(() => {
-    setCurrentDoc(documents[0])
+    if (documents !== null) {
+      setCurrentDoc(documents[0])
+    }
   }, [documents])
 
   if (!documents) return null
