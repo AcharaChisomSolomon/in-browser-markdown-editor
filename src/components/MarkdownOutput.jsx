@@ -110,6 +110,7 @@ const Preview = styled.div`
     color: inherit;
   }
   blockquote, code {
+    /* width: 100%; */
     display: block;
     padding: 1rem;
     border-radius: .5rem;
