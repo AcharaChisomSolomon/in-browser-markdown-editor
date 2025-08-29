@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { createNewDocument } from "../utils/documentHelper";
+import { 
+  createNewDocument,
+  cleanDocumentName
+} from "../utils/documentHelper";
 
 function getInitialDataSync() {
   const local = localStorage.getItem("documents");
@@ -42,7 +45,8 @@ export default function useGetData() {
   };
 
   const updateDocument = (id, doc) => {
-    setDocuments(docs => docs.map(d => d.id === id ? doc : d))
+    const newDoc = { ...doc, name: cleanDocumentName(doc.name, doc.id)}
+    setDocuments(docs => docs.map(d => d.id === id ? newDoc : d))
   };
 
   const deleteDocument = (id) => {

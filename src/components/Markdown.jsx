@@ -36,6 +36,8 @@ const Wrapper = styled.main`
   background-color: var(--bg);
   color: var(--text);
 
+  overflow-y: auto;
+
   @media ${QUERIES.tabletAndLarger} {
     grid-template-columns: ${p => !p.show && '1fr auto 1fr'};
   }

@@ -1,12 +1,18 @@
+import React from "react";
 import styled from "@emotion/styled";
+import { marked } from "marked";
 
 import UnstyledButton from "../utils/UnstyledButton";
+import markdownContext from "../utils/markdownContext";
 import { QUERIES } from "../utils/constants";
 
 export default function MarkdownOutput({
   showPreviewOnly,
   setShowPreviewOnly
 }) {
+  const { currentDoc } = React.useContext(markdownContext)
+  const html = marked(currentDoc?.content || '')
+
   return (
     <Wrapper show={showPreviewOnly}>
 
@@ -19,7 +25,7 @@ export default function MarkdownOutput({
         </PreviewToggler>
       </SubHeader>
 
-      <div></div>
+      <Preview dangerouslySetInnerHTML={{__html: html}}></Preview>
 
     </Wrapper>
   )
@@ -55,5 +61,60 @@ const PreviewToggler = styled(UnstyledButton)`
         fill: var(--orange);
       }
     }
+  }
+`;
+
+const Preview = styled.div`
+  width: min(calc(672 / 16 * 1rem), 100%);
+  margin: 0 auto;
+  padding: 1rem;
+  color: var(--text-header);
+  font-family: var(--ff-markdown-output);
+  line-height: 1.5;
+  font-size: var(--fs-m-p);
+
+  h1, h2, h3, h4, h5 {
+    color: var(--text-h12345);
+    margin-block: 0.5rem 1rem;
+  }
+  h6 {
+    color: var(--orange);
+    margin-block: 1rem 1.5rem;
+    font-size: var(--fs-m-h6);
+  }
+  h1 {
+    margin-block-start: 0;
+    font-size: var(--fs-m-h1);
+  }
+  h2 {
+    font-size: var(--fs-m-h2);
+  }
+  h3 {
+    font-size: var(--fs-m-h3);
+  }
+  h4 {
+    font-size: var(--fs-m-h4);
+  }
+  h5 {
+    font-size: var(--fs-m-h5);
+  }
+  ul li::marker {
+    color: var(--orange);
+  }
+  a {
+    color: inherit;
+  }
+  blockquote, code {
+    display: block;
+    padding: 1rem;
+    border-radius: .5rem;
+    background-color: var(--bg-sub);
+    margin-block: 0.5rem;
+  }
+  blockquote {
+    border-left: 4px solid var(--orange);
+  }
+  p {
+    margin-block: 0.5rem;
   }
 `;

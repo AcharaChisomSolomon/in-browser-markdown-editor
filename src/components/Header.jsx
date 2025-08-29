@@ -1,6 +1,8 @@
 import React from "react"
 import styled from "@emotion/styled"
 
+import DeletionConfirmation from "./DeletionConfirmation"
+
 import UnstyledButton from "../utils/UnstyledButton"
 import VisuallyHidden from "../utils/VisuallyHidden"
 import markdownContext from "../utils/markdownContext"
@@ -12,14 +14,15 @@ import IconSave from "../assets/icon-save.svg"
 import IconDocument from "../assets/icon-document.svg"
 
 export default function Header() {
+  const [showDeleteBar, setShowDeleteBar] = React.useState(false)
   const { 
     showSidebar, 
     setShowSidebar,
     setCurrentDoc,
-    currentDoc
+    currentDoc,
+    documents,
+    docFunctions
   } = React.useContext(markdownContext)
-
-  console.log(currentDoc)
 
   const updateDocName = e => {
     setCurrentDoc(doc => ({...doc, name: e.target.value}))
@@ -40,20 +43,33 @@ export default function Header() {
             value={currentDoc?.name || ''} 
             type="text"
             onChange={updateDocName}
+            placeholder={documents.length === 0 ? '<--- Create a new file' : ''}
           />
         </InputSubContainer>
       </InputContainer>
 
       <Btns>
-        <DeleteBtn>
+        <DeleteBtn 
+          onClick={() => setShowDeleteBar(true)}
+          disabled={documents.length === 0 ? true : false}
+        >
           <VisuallyHidden>Delete</VisuallyHidden>
           <svg width="18" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 16a1 1 0 0 0 1-1V9a1 1 0 1 0-2 0v6a1 1 0 0 0 1 1ZM17 4h-4V3a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v1H1a1 1 0 1 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V6h1a1 1 0 0 0 0-2ZM7 3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1H7V3Zm7 14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6h10v11Zm-3-1a1 1 0 0 0 1-1V9a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1Z" fill="#7C8187"/></svg>
         </DeleteBtn>
-        <SaveBtn>
+        <SaveBtn
+          onClick={() => docFunctions[2](currentDoc.id, currentDoc)}
+          disabled={documents.length === 0 ? true : false}
+        >
           <img src={IconSave} alt="" />
           <span>Save Changes</span>
         </SaveBtn>
       </Btns>
+
+      <DeletionConfirmation
+        isOpen={showDeleteBar}
+        onDismiss={() => setShowDeleteBar(false)}
+        id={currentDoc?.id}
+      />
 
     </Wrapper>
   )
@@ -137,6 +153,11 @@ const Btns = styled.div`
 
 const DeleteBtn = styled(UnstyledButton)`
   flex-shrink: 0;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
   &:hover {
     svg {
       path {
@@ -163,6 +184,10 @@ const SaveBtn = styled(UnstyledButton)`
 
   &:hover {
     background-color: var(--orange-hover);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
   }
 
   @media ${QUERIES.tabletAndLarger} {

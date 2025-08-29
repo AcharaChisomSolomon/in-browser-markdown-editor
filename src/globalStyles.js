@@ -54,6 +54,7 @@ export default css`
     --grey-300: hsl(0, 0%, 89%);
     --grey-200: hsl(0, 0%, 96%);
     --grey-100: hsl(0, 0%, 100%);
+    --grey-opaque: rgba(124, 129, 135, 0.3);
     --orange: hsl(13, 75%, 58%);
     --orange-hover: hsl(21, 86%, 67%);
 
@@ -140,6 +141,7 @@ export default css`
     --bg: var(--grey-100);
     --bg-sub: var(--grey-200);
     --text-header: var(--grey-500);
+    --text-h12345: var(--grey-700);
     --text-input: var(--grey-700);
     --hr-line: var(--grey-300);
   }
@@ -147,6 +149,7 @@ export default css`
     --bg: var(--grey-1000);
     --bg-sub: var(--grey-900);
     --text-header: var(--grey-400);
+    --text-h12345: var(--grey-100);
     --text-input: var(--grey-400);
     --hr-line: var(--grey-600);
   }

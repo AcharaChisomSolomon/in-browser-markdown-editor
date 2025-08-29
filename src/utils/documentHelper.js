@@ -40,6 +40,16 @@ export function getDocument(documents, id) {
   return documents.find(doc => doc.id === id)
 }
 
-export function cleanDocumentName(name) {
-  return `${name.split('.')[0]}.md`
+export function cleanDocumentName(name, id) {
+  if (name.endsWith('.md')) {
+    if (name.length > 3) {
+      return name
+    }
+  }
+
+  if (!name.includes('.md') && name !== '') {
+    return `${name}.md`
+  }
+
+  return `doc-${id}.md`
 }
