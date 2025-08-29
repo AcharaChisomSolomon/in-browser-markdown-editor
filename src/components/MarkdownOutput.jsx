@@ -25,7 +25,7 @@ export default function MarkdownOutput({
         </PreviewToggler>
       </SubHeader>
 
-      <Preview dangerouslySetInnerHTML={{__html: html}}></Preview>
+      <Preview show={showPreviewOnly} dangerouslySetInnerHTML={{__html: html}}></Preview>
 
     </Wrapper>
   )
@@ -66,6 +66,11 @@ const PreviewToggler = styled(UnstyledButton)`
 
 const Preview = styled.div`
   width: min(calc(672 / 16 * 1rem), 100%);
+
+  @media ${QUERIES.tabletAndLarger} {
+    width: ${p => p.show ? 'min(calc(672 / 16 * 1rem), 100%)' : '100%'};
+  }
+
   margin: 0 auto;
   padding: 1rem;
   color: var(--text-header);
