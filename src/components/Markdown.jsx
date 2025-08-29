@@ -42,7 +42,7 @@ const Wrapper = styled.main`
 `;
 
 const Hr = styled.hr`
-  display: ${p => p.show && 'none'};
+  display: none;
   border: none;
   width: 1px;
   background-color: var(--hr-line);

@@ -11,20 +11,26 @@ import useGetLightTheme from "./hooks/useGetLightTheme"
 import useGetData from "./hooks/useGetData"
 
 export default function App() {
+  const [documents, ...docFunctions] = useGetData()
+  const [currentDoc, setCurrentDoc] = React.useState(null)
   const [showSidebar, setShowSidebar] = React.useState(false)
-  const [fileName, setFileName] = React.useState("welcome.md")
   const [isLightTheme, setIsLightTheme] = useGetLightTheme()
-  const [data] = useGetData()
+  
+  React.useEffect(() => {
+    setCurrentDoc(documents[0])
+  }, [documents])
 
-  console.log(data)
+  if (!documents) return null
 
   const necessaryStates = {
     showSidebar,
     setShowSidebar,
-    fileName,
-    setFileName,
     isLightTheme,
-    setIsLightTheme
+    setIsLightTheme,
+    currentDoc,
+    setCurrentDoc,
+    docFunctions,
+    documents
   }
 
   return (

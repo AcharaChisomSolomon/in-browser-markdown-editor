@@ -1,50 +1,53 @@
 import { useEffect, useState } from "react";
 
-// Helper to get initial data from localStorage or fallback to data.json
-async function fetchInitialData() {
-  const local = localStorage.getItem("markdown-documents");
+import { createNewDocument } from "../utils/documentHelper";
+
+function getInitialDataSync() {
+  const local = localStorage.getItem("documents");
   if (local) {
     try {
       return JSON.parse(local);
     } catch {
-      // fallback to data.json if parse fails
+      // fallback to null if parse fails
     }
   }
-  // fallback: fetch data.json
-  const resp = await fetch("/src/data.json");
-  return await resp.json();
+  return null;
 }
 
 export default function useGetData() {
-  const [documents, setDocuments] = useState(null);
+  const [documents, setDocuments] = useState(() => getInitialDataSync());
 
-  // Load data on mount
+  // Fetch data.json only if localStorage is empty
   useEffect(() => {
-    let mounted = true;
-    fetchInitialData().then((data) => {
-      if (mounted) setDocuments(data);
-    });
-    return () => { mounted = false; };
-  }, []);
+    if (documents === null) {
+      fetch("/src/data.json")
+        .then((resp) => resp.json())
+        .then((data) => {
+          console.log(data)
+          setDocuments(data);
+        });
+    }
+  }, [documents]);
 
   // Save to localStorage on change
   useEffect(() => {
-    if (documents) {
-      localStorage.setItem("markdown-documents", JSON.stringify(documents));
+    if (documents !== null) {
+      localStorage.setItem("documents", JSON.stringify(documents));
     }
   }, [documents]);
 
   const addNewDocument = () => {
+    const newDoc = createNewDocument()
+    setDocuments(docs => [newDoc, ...docs])
+  };
 
-  }
+  const updateDocument = (id, doc) => {
+    setDocuments(docs => docs.map(d => d.id === id ? doc : d))
+  };
 
-  const updateDocuments = () => {
+  const deleteDocument = (id) => {
+    setDocuments(docs => docs.filter(d => d.id !== id))
+  };
 
-  }
-
-  const deleteDocuments = () => {
-
-  }
-
-  return [documents, addNewDocument, updateDocuments, deleteDocuments];
+  return [documents, setDocuments, addNewDocument, updateDocument, deleteDocument];
 }

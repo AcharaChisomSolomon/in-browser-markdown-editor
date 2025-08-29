@@ -6,6 +6,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import markdownContext from "../utils/markdownContext";
 import VisuallyHidden from "../utils/VisuallyHidden";
 import UnstyledButton from "../utils/UnstyledButton";
+import { convertDateToString, getDocument } from "../utils/documentHelper";
 
 import Logo from "../assets/logo.svg"
 import IconDocument from "../assets/icon-document.svg"
@@ -15,8 +16,12 @@ export default function Sidebar() {
     showSidebar, 
     setShowSidebar,
     isLightTheme,
-    setIsLightTheme
+    setIsLightTheme,
+    documents,
+    setCurrentDoc,
+    docFunctions
   } = React.useContext(markdownContext);
+  const [setDocuments, addNewDocument, ..._] = docFunctions
   const [isClosing, setIsClosing] = React.useState(false);
 
   React.useEffect(() => {
@@ -33,6 +38,12 @@ export default function Sidebar() {
       setShowSidebar(false);
     }
   };
+
+  const handlePageSwitch = id => {
+    const newDoc = getDocument(documents, id)
+    setDocuments(docs => [newDoc, ...docs.filter(d => d.id !== id)])
+    setCurrentDoc(newDoc)
+  }
 
   if (!showSidebar && !isClosing) return null;
 
@@ -53,81 +64,22 @@ export default function Sidebar() {
             MY DOCUMENTS
           </Description>
 
-          <NewDocument>
+          <NewDocument onClick={addNewDocument}>
             <span>+ New Document</span>
           </NewDocument>
 
           <Wrapper>
-            <Document>
-              <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
-              <DocumentInfo>
-                <DocumentDate>01 November 2022</DocumentDate>
-                <DocumentName>welcome.md</DocumentName>
-              </DocumentInfo>
-            </Document>
-            <Document>
-              <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
-              <DocumentInfo>
-                <DocumentDate>01 April 2022</DocumentDate>
-                <DocumentName>Some-long-name-so-looong.md</DocumentName>
-              </DocumentInfo>
-            </Document>
-            <Document>
-              <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
-              <DocumentInfo>
-                <DocumentDate>01 April 2022</DocumentDate>
-                <DocumentName>Some-long-name-so-looong.md</DocumentName>
-              </DocumentInfo>
-            </Document>
-            <Document>
-              <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
-              <DocumentInfo>
-                <DocumentDate>01 April 2022</DocumentDate>
-                <DocumentName>Some-long-name-so-looong.md</DocumentName>
-              </DocumentInfo>
-            </Document>
-            <Document>
-              <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
-              <DocumentInfo>
-                <DocumentDate>01 April 2022</DocumentDate>
-                <DocumentName>Some-long-name-so-looong.md</DocumentName>
-              </DocumentInfo>
-            </Document>
-            <Document>
-              <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
-              <DocumentInfo>
-                <DocumentDate>01 April 2022</DocumentDate>
-                <DocumentName>Some-long-name-so-looong.md</DocumentName>
-              </DocumentInfo>
-            </Document>
-            <Document>
-              <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
-              <DocumentInfo>
-                <DocumentDate>01 April 2022</DocumentDate>
-                <DocumentName>Some-long-name-so-looong.md</DocumentName>
-              </DocumentInfo>
-            </Document>
-            <Document>
-              <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
-              <DocumentInfo>
-                <DocumentDate>01 April 2022</DocumentDate>
-                <DocumentName>Some-long-name-so-looong.md</DocumentName>
-              </DocumentInfo>
-            </Document>
-            <Document>
-              <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
-              <DocumentInfo>
-                <DocumentDate>01 April 2022</DocumentDate>
-                <DocumentName>Some-long-name-so-looong.md</DocumentName>
-              </DocumentInfo>
-            </Document>
-            <Document>
-              <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
-              <DocumentInfo>
-                <DocumentDate>01 April 2022</DocumentDate>
-                <DocumentName>Some-long-name-so-looong.md</DocumentName>
-              </DocumentInfo>
-            </Document>
+            {documents.map(doc => (
+              <li key={doc.id}>
+                <Document onClick={() => handlePageSwitch(doc.id)}>
+                  <DocumentIcon><img src={IconDocument} alt="" /></DocumentIcon>
+                  <DocumentInfo>
+                    <DocumentDate>{convertDateToString(doc.createdAt)}</DocumentDate>
+                    <DocumentName>{doc.name}</DocumentName>
+                  </DocumentInfo>
+                </Document>
+              </li>
+            ))}
           </Wrapper>
 
           <LightThemeContainer onClick={() => setIsLightTheme(c => !c)}>
@@ -213,7 +165,9 @@ const NewDocument = styled(UnstyledButton)`
   }
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.ul`
+  padding: 0;
+  list-style: none;
   display: flex;
   flex-direction: column;
   gap: 1rem;

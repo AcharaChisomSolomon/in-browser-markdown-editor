@@ -15,9 +15,15 @@ export default function Header() {
   const { 
     showSidebar, 
     setShowSidebar,
-    fileName,
-    setFileName
+    setCurrentDoc,
+    currentDoc
   } = React.useContext(markdownContext)
+
+  console.log(currentDoc)
+
+  const updateDocName = e => {
+    setCurrentDoc(doc => ({...doc, name: e.target.value}))
+  }
 
   return (
     <Wrapper>
@@ -31,9 +37,9 @@ export default function Header() {
         <InputSubContainer>
           <span>Document Name</span>
           <Input 
-            value={fileName} 
+            value={currentDoc?.name || ''} 
             type="text"
-            onChange={(e) => setFileName(e.target.value)}
+            onChange={updateDocName}
           />
         </InputSubContainer>
       </InputContainer>
